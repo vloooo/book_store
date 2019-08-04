@@ -9,9 +9,11 @@ class ExtraData(models.Model):
 
     def set_birthday(self, date):
         self.birthday = date
+        self.save()
 
     def set_gender(self, gndr):
         self.gender = gndr
+        self.save()
 
     def __str__(self):
         return self.user.username

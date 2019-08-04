@@ -7,7 +7,10 @@ def register(request):
     if request.method == request.POST:
         form = RegForm(request.POST)
         if form.is_valid():
-            form.save()
+            user = form.save(commit=False)
+            user.extradata.gender = form['gender']
+            user.extradata.birthday = form['birthday']
+            user.save()
             return render(request, 'user_auth/scs.html')
         else:
             context = {'form': form}
