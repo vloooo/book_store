@@ -13,8 +13,9 @@ class ExtraData(models.Model):
                                 blank=True)
 
     gender = models.CharField(max_length=20,
-                              choices=[('male', 'Male'), ('female', 'Female'), ('other', 'Other')],
-                              null=True)
+                              choices=[('Male', 'Male'), ('Female', 'Female'), ('Other', 'Other')],
+                              null=True,
+                              blank=True)
 
     def __str__(self):
         return self.user.username

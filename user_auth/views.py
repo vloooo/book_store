@@ -1,15 +1,13 @@
-from django.shortcuts import render
-from user_auth.forms import RegForm, AuthForm
+from django.shortcuts import render, redirect
+from user_auth.forms import RegForm, AuthForm, EditProfileForm
 from user_auth.models import ExtraData
 from datetime import datetime
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login
 
 
-def register(request):
-    """
-    view for registration new user
-    """
+def registration(request):
+
     if request.method == 'POST':
         form = RegForm(request.POST)
 
@@ -57,3 +55,28 @@ def login_view(request):
         return render(request, 'user_auth/register.html', context)
 
 
+def profile_view(request):
+    context = {}
+    return render(request, 'user_auth/profile.html', context)
+
+
+def profile_edit_view(request):
+
+    if request.method == 'POST':
+        form = EditProfileForm(request.POST, instance=request.user)
+
+        if form.is_valid():
+            user = form.save()
+            # fill birthday and gender fields that store in another model with OneToOne relationship to User
+            ExtraData.objects.filter(user=user).update(gender=form.cleaned_data.get('gender'),
+                                                       birthday=form.cleaned_data.get('birthday'))
+            return redirect('auth:profile')
+
+        else:
+            context = {'form': form}
+            return render(request, 'user_auth/register.html', context)
+
+    else:
+        form = EditProfileForm(instance=request.user)
+        context = {'form': form}
+        return render(request, 'user_auth/register.html', context)

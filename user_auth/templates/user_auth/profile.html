@@ -1,0 +1,9 @@
+{% extends 'user_auth/base.html' %}
+
+{% block content %}
+    <p>Field: {{ user.username }}</p>
+    <p>Field: {{ user.email }}</p>
+    <p>Field: {{ user.extra_data.birthday }}</p>
+    <p>Field: {{ user.extra_data.gender }}</p>
+
+{% endblock%}

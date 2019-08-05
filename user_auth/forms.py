@@ -2,10 +2,11 @@ from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import authenticate
+from user_auth.models import ExtraData
 
 
 # form for registration new user
-class RegForm(forms.ModelForm, ):
+class RegForm(forms.ModelForm):
 
     password_conf = forms.CharField(required=True,
                                     max_length=30,
@@ -39,6 +40,7 @@ class RegForm(forms.ModelForm, ):
         users = User.objects.filter(email=self.cleaned_data['email'])
         if users.exists():
             raise forms.ValidationError('This email is used for another account. Please, enter another one.')
+        return self.cleaned_data['email']
 
 
 class AuthForm(AuthenticationForm):
@@ -72,3 +74,32 @@ class AuthForm(AuthenticationForm):
                 self.confirm_login_allowed(self.user_cache)
 
         return self.cleaned_data
+
+
+class EditProfileForm(forms.ModelForm):
+    birthday = forms.DateField(input_formats=['%d/%m/%Y'])
+
+    gender = forms.ChoiceField(choices=[('Male', 'Male'), ('Female', 'Female'), ('Other', 'Other')])
+
+    class Meta:
+        model = User
+        fields = ('username', 'email', 'gender', 'birthday')
+
+    # redefine init to fill gender and birthday field; store user object for validation
+    def __init__(self, *args, **kwargs):
+        self.user = kwargs.get('instance')
+
+        if not len(args):
+            initial = kwargs.pop('initial', {})
+            initial['birthday'] = self.user.extra_data.birthday.strftime("%d/%m/%Y")
+            initial['gender'] = self.user.extra_data.gender
+            kwargs['initial'] = initial
+
+        super(EditProfileForm, self).__init__(*args, **kwargs)
+
+    # validation for uniq. email
+    def clean_email(self):
+        users = User.objects.filter(email=self.cleaned_data['email'])
+        if users.exists() and users.first().username != self.user.username:
+            raise forms.ValidationError('This email is used for another account. Please, enter another one.')
+        return self.cleaned_data['email']
