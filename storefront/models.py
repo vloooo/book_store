@@ -21,7 +21,7 @@ class Books(models.Model):
 
 
 class Orders(models.Model):
-    books = models.ManyToManyField(Books, symmetrical=True)
+    ord_books = models.ManyToManyField(Books, symmetrical=True, through='OrderedBook', through_fields=('order', 'book'))
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     sum = models.DecimalField(decimal_places=2, max_digits=10)
     date = models.DateTimeField(auto_now_add=True)
@@ -35,7 +35,11 @@ class Orders(models.Model):
         return str(self.pk)
 
 
-
+class OrderedBook(models.Model):
+    order = models.ForeignKey(Orders, on_delete=models.CASCADE)
+    book = models.ForeignKey(Books, on_delete=models.CASCADE)
+    amount = models.PositiveIntegerField(blank=True, default=1)
+    price = models.DecimalField(decimal_places=2, max_digits=10)
 
 
 class Author(models.Model):
