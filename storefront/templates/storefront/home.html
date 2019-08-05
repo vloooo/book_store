@@ -1,0 +1,16 @@
+{% extends 'user_auth/base.html' %}
+
+{% block content %}
+
+    {% for book in books %}
+
+    <p>Field: {{ book.title }}</p>
+
+    {% if book.amount == 0 %}
+        <p>ABSENT</p>
+    {% endif %}
+    <a href="{% url 'storefront:to_cart' pk=book.pk %}">to cart</a>
+    <br>
+    {% endfor %}
+
+{% endblock%}

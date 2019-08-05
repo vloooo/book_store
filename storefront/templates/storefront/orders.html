@@ -1,0 +1,20 @@
+{% extends 'user_auth/base.html' %}
+
+{% block content %}
+
+    {% for order in user.orders.all %}
+
+        <p>
+            Field 1. {{ order.date }} ---- {{ order.sum }}
+            {% if order.is_active %}
+            ------> active
+            {% endif %}
+        </p>
+        {% for book in order.books.all %}
+
+            <p>==>{{ book.title }}</p>
+
+        {% endfor %}
+    {% endfor %}
+
+{% endblock%}

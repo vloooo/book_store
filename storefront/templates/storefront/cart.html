@@ -1,0 +1,24 @@
+{% extends 'user_auth/base.html' %}
+
+{% block content %}
+
+    <p>
+        Field 1. {{ order.date }} ---- {{ order.sum }}
+        {% if order.is_active %}
+        ------> active
+        {% endif %}
+    </p>
+    {% for book in order.books.all %}
+
+        <p>==>{{ book.title }}</p>
+
+    {% endfor %}
+    
+    {% if u_shu %}
+    <form method="POST">
+        {% csrf_token %}
+                <p>Are you sure you want to close the order?</p>
+        <input type="submit">
+    </form>
+    {% endif %}
+{% endblock%}
