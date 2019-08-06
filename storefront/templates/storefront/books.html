@@ -1,0 +1,15 @@
+{% extends 'user_auth/base.html' %}
+
+{% block content %}
+
+    {% for book in books %}
+
+        <p>
+            <a href="{% url 'storefront:profile_book' pk=book.pk %}">{{ book.title }}</a> ----------
+            <a href="{% url 'storefront:del_book' pk=book.pk %}">DEL</a>
+            <a href="{% url 'storefront:edit_book' pk=book.pk %}">EDIT</a>
+        </p>
+
+    {% endfor %}
+
+{% endblock%}

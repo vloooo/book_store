@@ -1,0 +1,29 @@
+{% extends 'user_auth/base.html' %}
+
+{% block content %}
+
+    {% if order is not None %}
+        <p>
+            Field 1. {{ order.date }} ---- {{ order.sum }}
+            {% if order.is_active %}
+            ------> active
+            {% endif %}
+        </p>
+        {% for book in order.ord_books.all %}
+
+            <p>==>{{ book.title }}</p>
+
+        {% endfor %}
+
+        <form method="POST" action="{% url 'storefront:close_order' %}">
+            {% csrf_token %}
+            <input type="submit" name="approve" value="Approve">
+            <input type="submit" name="cancel" value="Cancel">
+
+        </form>
+
+    {% else %}
+        <p>Sorry, You haven't active orders.</p>
+    {% endif %}
+
+{% endblock%}

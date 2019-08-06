@@ -1,10 +1,39 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+
 </head>
 <body>
+{{ user.username }}
+
+<a href="{% url 'storefront:index' %}">Home</a>
+
+{% if user.is_active %}
+    <a href="{% url 'storefront:close_order' %}">Close order</a>
+    <a href="{% url 'storefront:cart' %}">Cart</a>
+    <a href="{% url 'storefront:archive' %}">Archive</a>
+{% endif %}
+
+{% if user.is_staff %}
+    <a href="{% url 'storefront:show_users' %}">Users</a>
+    <a href="{% url 'storefront:show_books' %}">Books</a>
+    <a href="{% url 'storefront:new_book' %}">new Books</a>
+{% endif %}
+
+{% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+            <li {% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
+        {% endfor %}
+    </ul>
+{% endif %}
+
 {% block content %}
 {% endblock %}
 </body>

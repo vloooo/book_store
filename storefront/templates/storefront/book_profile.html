@@ -1,0 +1,12 @@
+{% extends 'user_auth/base.html' %}
+
+{% block content %}
+    <p>Field: {{ book.title }}</p>
+    <p>Field: {{ book.author }}</p>
+    <p>Field: {{ book.year }}</p>
+    <p>Field: {{ book.price }}</p>
+
+    <a href="{% url 'storefront:del_book' pk=book.pk %}">DEL</a>
+    <a href="{% url 'storefront:edit_book' pk=book.pk %}">EDIT</a>
+
+{% endblock%}
