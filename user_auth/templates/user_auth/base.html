@@ -3,38 +3,142 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+    <title>TestBookStore</title>
 
     <link rel="stylesheet" href="{% static 'css/base.css' %}">
 
+    {% block additional_links %}
+    {% endblock %}
 </head>
 <body>
-{{ user.username }}
 
-<a href="{% url 'storefront:index' %}">Home</a>
+    <header>
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark justify-content-between">
+          <a class="navbar-brand" href="{% url 'storefront:index' %}">TestBookStore</a>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarNavDropdown">
+            <ul class="navbar-nav">
 
-{% if user.is_active %}
-    <a href="{% url 'storefront:close_order' %}">Close order</a>
-    <a href="{% url 'storefront:cart' %}">Cart</a>
-    <a href="{% url 'storefront:archive' %}">Archive</a>
-{% endif %}
+                {% if user.is_active %}
+                <li class="nav-item active">
+                    <a class="nav-link" href="{% url 'auth:profile' %}">Hi, {{ user.username }}</a>
+                </li>
+                {% endif %}
 
-{% if user.is_staff %}
-    <a href="{% url 'storefront:show_users' %}">Users</a>
-    <a href="{% url 'storefront:show_books' %}">Books</a>
-    <a href="{% url 'storefront:new_book' %}">new Books</a>
-{% endif %}
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'storefront:index' %}">Home</a>
+              </li>
 
-{% if messages %}
-    <ul class="messages">
-        {% for message in messages %}
-            <li {% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
-        {% endfor %}
-    </ul>
-{% endif %}
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  Genres
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                    {% for genre in genres %}
+                        <a class="dropdown-item" href="{% url 'storefront:from' g_name=genre.name %}">{{ genre.name }}</a>
+                    {% endfor %}
+                </div>
+              </li>
 
-{% block content %}
-{% endblock %}
-</body>
+                <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  Authors
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                    {% for author in authors %}
+                        <a class="dropdown-item" href="{% url 'storefront:by' a_name=author.name %}">{{ author.name }}</a>
+                    {% endfor %}
+                </div>
+              </li>
+            </ul>
+          </div>
+            <ul class="navbar-nav">
+                {% if not user.is_staff and user.is_active %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'storefront:archive' %}"><span class="fa fa-inbox"></span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'storefront:cart' %}"><span class="fa fa-shopping-basket"></span></a>
+                    </li>
+                {% endif %}
+
+                {% if user.is_active %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'auth:logout' %}"><span class="fa fa-power-off"></span></a>
+                    </li>
+                {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'auth:login' %}"><span class="fa fa-sign-in"></span></a>
+                    </li>
+                {% endif %}
+            </ul>
+
+        </nav>
+
+    </header>
+
+
+    <section>
+      <div class="container-fluid">
+
+        <div class="row">
+
+
+                <div class="bg-light border-right col-md-2 col-lg-2" id="sidebar-wrapper">
+      <div class="list-group list-group-flush">
+                {% if user.is_staff %}
+                    <a href="{% url 'storefront:show_users' %}" class="list-group-item list-group-item-action bg-light">Users</a>
+                    <a href="{% url 'storefront:show_books' %}" class="list-group-item list-group-item-action bg-light">Books</a>
+
+                {% else %}
+                    <a href="{% url 'storefront:index' %}" class="list-group-item list-group-item-action bg-light">Books</a>
+                {% endif %}
+
+                {% if user.is_active %}
+                    <a href="{% url 'auth:profile' %}" class="list-group-item list-group-item-action bg-light">Profile</a>
+                {% endif %}
+
+                {% if user.is_active and not user.is_staff %}
+                    <a href="{% url 'storefront:cart' %}" class="list-group-item list-group-item-action bg-light">Cart</a>
+                    <a href="{% url 'storefront:archive' %}" class="list-group-item list-group-item-action bg-light">Orders</a>
+                {% endif %}
+      </div>
+    </div>
+
+            <main class="col-md-10 col-lg-10">
+                {% if messages %}
+                    <ul class="messages">
+                        {% for message in messages %}
+                            <li {% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+
+                {% block content %}
+                {% endblock %}
+            </main>
+
+        </div>
+
+      </div>
+    </section>
+
+    <footer>
+      <div class="container">
+
+      </div>
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+  </body>
 </html>

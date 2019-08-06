@@ -6,7 +6,12 @@
     <p>Field: {{ book.year }}</p>
     <p>Field: {{ book.price }}</p>
 
-    <a href="{% url 'storefront:del_book' pk=book.pk %}">DEL</a>
-    <a href="{% url 'storefront:edit_book' pk=book.pk %}">EDIT</a>
+    {% if user.is_staff %}
+        <a href="{% url 'storefront:del_book' pk=book.pk %}">DEL</a>
+        <a href="{% url 'storefront:edit_book' pk=book.pk %}">EDIT</a>
+    {% else %}
+        <a href="{% url 'storefront:to_cart' pk=book.pk %}">to cart</a>
+    {% endif %}
+
 
 {% endblock%}

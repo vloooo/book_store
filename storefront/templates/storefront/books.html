@@ -3,6 +3,7 @@
 {% block content %}
 
     {% for book in books %}
+                            <a href="{% url 'storefront:new_book' %}">new Books</a>
 
         <p>
             <a href="{% url 'storefront:profile_book' pk=book.pk %}">{{ book.title }}</a> ----------
