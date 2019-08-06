@@ -8,9 +8,13 @@
 
     {% if book.amount == 0 %}
         <p>ABSENT</p>
+        <a href="{% url 'storefront:to_cart' pk=book.pk %}" class="disabled">to cart</a>
+
+    {% else %}
+        <a href="{% url 'storefront:to_cart' pk=book.pk %}">to cart</a>
+
     {% endif %}
-    <a href="{% url 'storefront:to_cart' pk=book.pk %}">to cart</a>
     <br>
     {% endfor %}
 
-{% endblock%}
+{% endblock %}

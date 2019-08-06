@@ -2,7 +2,6 @@ from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import authenticate
-from user_auth.models import ExtraData
 
 
 # form for registration new user
@@ -77,7 +76,7 @@ class AuthForm(AuthenticationForm):
 
 
 class EditProfileForm(forms.ModelForm):
-    birthday = forms.DateField(input_formats=['%d/%m/%Y'])
+    birthday = forms.DateField(input_formats=['%d/%m/%Y'], required=False)
 
     gender = forms.ChoiceField(choices=[('Male', 'Male'), ('Female', 'Female'), ('Other', 'Other')])
 
