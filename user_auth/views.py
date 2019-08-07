@@ -52,7 +52,9 @@ def login_view(request):
 
 
 def profile_view(request):
-    return render(request, 'user_auth/profile.html', get_genres_authors({}))
+    context = {}
+    get_genres_authors(context)
+    return render(request, 'user_auth/profile.html', context)
 
 
 def profile_edit_view(request):

@@ -23,7 +23,6 @@ def index(request, a_name=None, g_name=None):
 
     context = {'books': books}
     get_genres_authors(context)
-    print(g_name, books)
     return render(request, 'storefront/home.html', context)
 
 
@@ -32,7 +31,7 @@ def to_cart(request, pk):
 
     book = Books.objects.get(pk=pk)
     decr_book_amount(request, book)
-    active_order = Orders.objects.filter(is_active=True).first()
+    active_order = Orders.objects.filter(is_active=True, user=request.user).first()
 
     if active_order is not None:
         ordered_book = OrderedBook.objects.filter(book=book, order=active_order, price=book.price).first()
@@ -158,7 +157,9 @@ def book_edit(request, pk=None):
 
 
 def orders_archive(request):
-    return render(request, 'storefront/orders.html', get_genres_authors({}))
+    context = {}
+    get_genres_authors(context)
+    return render(request, 'storefront/orders.html', context)
 
 
 def get_genres_authors(context):

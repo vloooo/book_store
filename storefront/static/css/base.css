@@ -1,3 +1,24 @@
 a.disabled {
     pointer-events: none;
 }
+
+.navbar {
+
+    min-height: 7vh;
+}
+
+
+@media (min-width: 768px) {
+
+#sidebar-wrapper {
+    min-height: 93vh;
+}
+
+#sidebar-wrapper2 {
+    position:fixed;
+}
+
+.list-group > a:first-child{
+    margin-top: 35%;
+}
+}
