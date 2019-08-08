@@ -2,15 +2,50 @@
 
 {% block content %}
 
-    {% for book in books %}
-                            <a href="{% url 'storefront:new_book' %}">new Books</a>
+<div id="table-wrapper" class="d-flex flex-column">
+<table class="table table-hover table-responsive-lg mb-5">
+  <thead class="thead-light">
+    <tr>
+      <th scope="col">Title</th>
+      <th scope="col">Author</th>
+      <th scope="col">Genre</th>
+        <th scope="col" class="text-center">Year</th>
+      <th scope="col" class="text-center">Price</th>
+      <th scope="col" class="text-center">Amount</th>
+      <th scope="col"></th>
+      <th scope="col"></th>
 
-        <p>
-            <a href="{% url 'storefront:profile_book' pk=book.pk %}">{{ book.title }}</a> ----------
-            <a href="{% url 'storefront:del_book' pk=book.pk %}">DEL</a>
-            <a href="{% url 'storefront:edit_book' pk=book.pk %}">EDIT</a>
-        </p>
+    </tr>
+  </thead>
+  <tbody>
+      {% for book in books %}
+
+        <tr>
+          <th>{{ book.title }}</th>
+          <td>{{ book.author.name }}</td>
+          <td>{{ book.genre.name }}</td>
+          <td class="text-center">{{ book.year }}</td>
+            <td class="text-center">{{ book.price }}</td>
+          <td class="text-center">{{ book.amount }}</td>
+            <td class="text-center"><a href="{% url 'storefront:del_book' pk=book.pk %}"><span class="fa fa-trash"></span></a></td>
+          <td class="text-center"> <a href="{% url 'storefront:edit_book' pk=book.pk %}"><span class="fa fa-pencil-square-o"></span></a></td>
+
+
+
+        </tr>
 
     {% endfor %}
 
+  </tbody>
+</table>
+
+<a href="{% url 'storefront:new_book' %}" class="btn btn-secondary mb-5 ml-auto">new Book</a>
+
+</div>
+
+
+
 {% endblock%}
+
+
+

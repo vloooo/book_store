@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'user_auth.apps.UserAuthConfig',
     'storefront.apps.StorefrontConfig',
+    'bootstrap4'
 ]
 
 MIDDLEWARE = [
@@ -64,6 +65,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'storefront.context_processors.get_base_context',
             ],
         },
     },
@@ -121,3 +123,5 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 LOGIN_URL = 'auth:login'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'

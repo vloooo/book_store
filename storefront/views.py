@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from storefront.models import Books, Orders, OrderedBook, Genre, Author
+from storefront.models import Books, Orders, OrderedBook
 from django.db import IntegrityError
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib import messages
@@ -11,7 +11,7 @@ from storefront.forms import BookForm
 from django.contrib.auth.decorators import user_passes_test
 
 
-def index(request, a_name=None, g_name=None):
+def index(request, a_name=None, g_name=None, sort_p=None, sort_y=None):
     if request.user.is_staff:
         books = Books.objects.all()
     else:
@@ -20,9 +20,18 @@ def index(request, a_name=None, g_name=None):
         books = books.filter(author__name=a_name)
     elif g_name is not None:
         books = books.filter(genre__name=g_name)
+    elif sort_p is not None:
+        if sort_p == 'd':
+            books = books.order_by('price')
+        else:
+            books = books.order_by('-price')
+    elif sort_y is not None:
+        if sort_y == 'd':
+            books = books.order_by('year')
+        else:
+            books = books.order_by('-year')
 
     context = {'books': books}
-    get_genres_authors(context)
     return render(request, 'storefront/home.html', context)
 
 
@@ -64,8 +73,9 @@ def decr_book_amount(request, ordered_book):
 
 @login_required
 def cart(request):
-    context = {'order': request.user.orders.filter(is_active=True).first()}
-    get_genres_authors(context)
+    active_order = request.user.orders.filter(is_active=True).first()
+    context = {'order': active_order,
+               'ord_books': OrderedBook.objects.filter(order=active_order)}
     return render(request, 'storefront/cart.html', context)
 
 
@@ -95,14 +105,12 @@ def close_order(request):
 @user_passes_test(lambda user: user.is_staff)
 def show_users(request):
     context = {'users': User.objects.all()}
-    get_genres_authors(context)
     return render(request, 'storefront/users.html', context)
 
 
 @user_passes_test(lambda user: user.is_staff)
 def staff_book_list(request):
     context = {'books': Books.objects.all()}
-    get_genres_authors(context)
     return render(request, 'storefront/books.html', context)
 
 
@@ -125,7 +133,6 @@ def del_book(request, pk):
 def book_profile(request, pk):
     book = Books.objects.get(pk=pk)
     context = {'book': book}
-    get_genres_authors(context)
     return render(request, 'storefront/book_profile.html', context)
 
 
@@ -152,15 +159,10 @@ def book_edit(request, pk=None):
             form = BookForm(instance=book)
 
     context = {'form': form}
-    get_genres_authors(context)
-    return render(request, 'user_auth/register.html', context)
+    return render(request, 'storefront/edit_book.html', context)
 
 
 def orders_archive(request):
-    context = {}
-    get_genres_authors(context)
+    active_order = request.user.orders.filter(is_active=True).first()
+    context = {'ord_books': OrderedBook.objects.filter(order=active_order)}
     return render(request, 'storefront/orders.html', context)
-
-
-def get_genres_authors(context):
-    context.update({'genres': Genre.objects.all(), 'authors': Author.objects.all()})

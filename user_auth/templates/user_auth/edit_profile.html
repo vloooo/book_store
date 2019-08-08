@@ -19,11 +19,6 @@
 
     <div class="row justify-content-end p-3 align-items-center">
         <button type="submit" class="btn btn-secondary mr-3">Submit</button>
-        {% if form.gender %}
-            <a href="{% url 'auth:login' %}" class="text-white"> Login </a>
-        {% else %}
-            <a href="{% url 'auth:registration' %}" class="text-white"> or Sign up?</a>
-        {% endif %}
     </div>
 
 

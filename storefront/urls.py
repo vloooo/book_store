@@ -18,5 +18,7 @@ urlpatterns = [
     path('profile_book/<pk>', views.book_profile, name='profile_book'),
     path('by/<a_name>', views.index, name='by'),
     path('from/<g_name>', views.index, name='from'),
+    path('sort/<sort_p>', views.index, name='sort_p'),
+    path('sort/<sort_y>', views.index, name='sort_y'),
 
 ]

@@ -3,6 +3,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+        {% block additional_links %}
+    {% endblock %}
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
@@ -13,17 +15,14 @@
 
     <link rel="stylesheet" href="{% static 'css/base.css' %}">
 
-    {% block additional_links %}
-    {% endblock %}
+
 </head>
 <body>
 
     <header class="sticky-top" id="header">
       <nav class="navbar navbar-expand-lg navbar-dark bg-dark justify-content-between">
           <a class="navbar-brand" href="{% url 'storefront:index' %}">TestBookStore</a>
-          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-          </button>
+
           <div class="collapse navbar-collapse" id="navbarNavDropdown">
             <ul class="navbar-nav">
 
@@ -66,7 +65,8 @@
                         <a class="nav-link" href="{% url 'storefront:archive' %}"><span class="fa fa-inbox"></span></a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'storefront:cart' %}"><span class="fa fa-shopping-basket"></span></a>
+                        <a class="nav-link" href="{% url 'storefront:cart' %}"><span class="fa fa-shopping-basket
+                        {% if active_order is not None %} text-success {% endif %}"></span></a>
                     </li>
                 {% endif %}
 
@@ -93,7 +93,7 @@
 
 
                 <div class="bg-light border-right col-md-3 col-lg-2" id="sidebar-wrapper2">
-      <div class="list-group list-group-flush" id="sidebar-wrapper">
+      <div class="list-group list-group-flush pb-2" id="sidebar-wrapper">
                 {% if user.is_staff %}
                     <a href="{% url 'storefront:show_users' %}" class="list-group-item list-group-item-action bg-light border-top">Users</a>
                     <a href="{% url 'storefront:show_books' %}" class="list-group-item list-group-item-action bg-light">Books</a>
@@ -112,19 +112,18 @@
                 {% endif %}
       </div>
     </div>
+            <div id="content-wrapper" class="row container-fluid justify-content-center p-0 mx-auto pt-3">
+                            <main class="col-10 col-sm-11 col-md-9 col-lg-10 offset-md-3 offset-lg-2 my-auto" id="content">
 
-            <main class="col-md-9 col-lg-10 offset-md-3 offset-lg-2" id="content">
-                {% if messages %}
-                    {% for message in messages %}
-                    <div class="alert alert-success" role="alert">
-                      {{ message }}
-                    </div>
-                    {% endfor %}
-                {% endif %}
+                {% load bootstrap4 %}
+                {% bootstrap_messages %}
+
 
                 {% block content %}
                 {% endblock %}
             </main>
+            </div>
+
 
         </div>
 
@@ -137,8 +136,15 @@
       </div>
     </footer>
 
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+
+    {% block jquery%}
+            <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+
+    {% endblock %}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
   </body>
 </html>
+
+
+

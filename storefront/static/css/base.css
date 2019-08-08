@@ -7,7 +7,14 @@ a.disabled {
     min-height: 7vh;
 }
 
+#content{
+margin-top: 50px;
+}
 
+
+#content-wrapper {
+    min-height: 90vh;
+}
 @media (min-width: 768px) {
 
 #sidebar-wrapper {
@@ -16,6 +23,8 @@ a.disabled {
 
 #sidebar-wrapper2 {
     position:fixed;
+    left: 0;
+    bottom: 0;
 }
 
 .list-group > a:first-child{

@@ -3,7 +3,6 @@ from user_auth.forms import RegForm, AuthForm, EditProfileForm
 from user_auth.models import ExtraData
 from datetime import datetime
 from django.contrib.auth import authenticate, login
-from storefront.views import get_genres_authors
 
 
 def registration(request):
@@ -30,7 +29,6 @@ def registration(request):
         form = RegForm()
 
     context = {'form': form}
-    get_genres_authors(context)
     return render(request, 'user_auth/register.html', context)
 
 
@@ -47,14 +45,11 @@ def login_view(request):
         form = AuthForm()
 
     context = {'form': form}
-    get_genres_authors(context)
     return render(request, 'user_auth/register.html', context)
 
 
 def profile_view(request):
-    context = {}
-    get_genres_authors(context)
-    return render(request, 'user_auth/profile.html', context)
+    return render(request, 'user_auth/profile.html')
 
 
 def profile_edit_view(request):
@@ -73,5 +68,4 @@ def profile_edit_view(request):
         form = EditProfileForm(instance=request.user)
 
     context = {'form': form}
-    get_genres_authors(context)
-    return render(request, 'user_auth/register.html', context)
+    return render(request, 'user_auth/edit_profile.html', context)

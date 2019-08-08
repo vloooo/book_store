@@ -1,17 +1,38 @@
 {% extends 'user_auth/base.html' %}
+{% load static %}
+
 
 {% block content %}
-    <p>Field: {{ book.title }}</p>
-    <p>Field: {{ book.author }}</p>
-    <p>Field: {{ book.year }}</p>
-    <p>Field: {{ book.price }}</p>
 
-    {% if user.is_staff %}
-        <a href="{% url 'storefront:del_book' pk=book.pk %}">DEL</a>
-        <a href="{% url 'storefront:edit_book' pk=book.pk %}">EDIT</a>
-    {% else %}
-        <a href="{% url 'storefront:to_cart' pk=book.pk %}">to cart</a>
-    {% endif %}
+
+             <div class="col-12 col-lg-10 col-xl-8 container my-auto">
+         <div class="mb-sm-3 row text-white bg-dark p-2 rounded">
+            <div class=" col-sm mb-4">
+
+               <h5 class="card-title"> {{ book.title }} </h5>
+               <p class="card-text">
+                   <p class="ml-5"><span class="fa fa-long-arrow-right"></span> Author: {{ book.author.name }}</p>
+                    <p class="ml-5"><span class="fa fa-long-arrow-right"></span> Genre: {{ book.genre.name }}</p>
+                    <p class="ml-5"><span class="fa fa-long-arrow-right"></span> Year: {{ book.year }}</p>
+                    <p class="ml-5"><span class="fa fa-long-arrow-right"></span> Price: {{ book.price }}</p>
+                    <p class="ml-5"><span class="fa fa-long-arrow-right"></span> Amount: {{ book.amount }}</p>
+
+               </p>
+                    <div class="row justify-content-end">
+                            {% if user.is_staff %}
+                                <a href="{% url 'storefront:del_book' pk=book.pk %}" class="btn btn-outline-light btn-md">Delete</a>
+                                <a href="{% url 'storefront:edit_book' pk=book.pk %}" class="btn btn-outline-light btn-md mx-3">Edit</a>
+                            {% else %}
+                                <a href="{% url 'storefront:to_cart' pk=book.pk %}"class="btn btn-outline-light btn-lg mx-3"><span class="fa  fa-shopping-cart mx-5"></span></a>
+                            {% endif %}
+                    </div>
+            </div>
+             <div id="img-wrapper" class="col-sm bg-light rounded">
+                 <img class="col-sm" src="{% static 'css/1.png' %}" alt="Card image cap">
+             </div>
+
+         </div>
+      </div>
 
 
 {% endblock%}
