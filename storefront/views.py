@@ -9,22 +9,47 @@ from storefront import messages as msg
 from django.contrib.auth.models import User
 from storefront.forms import BookForm
 from django.contrib.auth.decorators import user_passes_test
+from django.core.paginator import Paginator
 
 
-def index(request):
+def index(request, a_name=None, g_name=None, sort_p=None, sort_y=None):
     if request.user.is_staff:
         books = Books.objects.all()
     else:
         books = Books.objects.filter(available=True)
-    context = {'books': books}
+    if a_name is not None:
+        books = books.filter(author__name=a_name)
+    elif g_name is not None:
+        books = books.filter(genre__name=g_name)
+    elif sort_p is not None:
+        if sort_p == 'd':
+            books = books.order_by('price')
+        else:
+            books = books.order_by('-price')
+    elif sort_y is not None:
+        if sort_y == 'd':
+            books = books.order_by('year')
+        else:
+            books = books.order_by('-year')
+
+    paginator = Paginator(books, 3)
+    if 'page' in request.GET:
+        page_num = request.GET['page']
+    else:
+        page_num = 1
+
+    page = paginator.get_page(page_num)
+
+    context = {'books': page.object_list, 'page': page}
     return render(request, 'storefront/home.html', context)
+
 
 @login_required
 def to_cart(request, pk):
 
     book = Books.objects.get(pk=pk)
     decr_book_amount(request, book)
-    active_order = Orders.objects.filter(is_active=True).first()
+    active_order = Orders.objects.filter(is_active=True, user=request.user).first()
 
     if active_order is not None:
         ordered_book = OrderedBook.objects.filter(book=book, order=active_order, price=book.price).first()
@@ -41,6 +66,7 @@ def to_cart(request, pk):
         active_order = Orders.objects.create(user=request.user, sum=book.price)
         OrderedBook.objects.create(book=book, order=active_order, price=book.price)
 
+    messages.success(request, msg.scs_msg('book', 'added to cart'))
     return redirect('storefront:index')
 
 
@@ -53,9 +79,12 @@ def decr_book_amount(request, ordered_book):
 
         return redirect('storefront:index')
 
+
 @login_required
 def cart(request):
-    context = {'order': request.user.orders.filter(is_active=True).first()}
+    active_order = request.user.orders.filter(is_active=True).first()
+    context = {'order': active_order,
+               'ord_books': OrderedBook.objects.filter(order=active_order)}
     return render(request, 'storefront/cart.html', context)
 
 
@@ -84,13 +113,27 @@ def close_order(request):
 
 @user_passes_test(lambda user: user.is_staff)
 def show_users(request):
-    context = {'users': User.objects.all()}
+    paginator = Paginator(User.objects.all().order_by('pk'), 10, 3)
+    if 'page' in request.GET:
+        page_num = request.GET['page']
+    else:
+        page_num = 1
+
+    page = paginator.get_page(page_num)
+    context = {'users': page.object_list, 'page': page}
     return render(request, 'storefront/users.html', context)
 
 
 @user_passes_test(lambda user: user.is_staff)
 def staff_book_list(request):
-    context = {'books': Books.objects.all()}
+    paginator = Paginator(Books.objects.all(), 10, 3)
+    if 'page' in request.GET:
+        page_num = request.GET['page']
+    else:
+        page_num = 1
+
+    page = paginator.get_page(page_num)
+    context = {'books': page.object_list, 'page': page}
     return render(request, 'storefront/books.html', context)
 
 
@@ -122,9 +165,9 @@ def book_edit(request, pk=None):
     if request.method == 'POST':
         try:
             book = Books.objects.get(pk=pk)
-            form = BookForm(request.POST, instance=book)
+            form = BookForm(request.POST, request.FILES, instance=book)
         except ObjectDoesNotExist:
-            form = BookForm(request.POST)
+            form = BookForm(request.POST, request.FILES)
 
         if form.is_valid():
             book = form.save()
@@ -139,8 +182,19 @@ def book_edit(request, pk=None):
             form = BookForm(instance=book)
 
     context = {'form': form}
-    return render(request, 'user_auth/register.html', context)
+    return render(request, 'storefront/edit_book.html', context)
 
 
 def orders_archive(request):
-    return render(request, 'storefront/orders.html')
+    active_order = request.user.orders.filter(is_active=True).first()
+    ord_books = OrderedBook.objects.filter(order=active_order)
+
+    paginator = Paginator(request.user.orders.all(), 5, 2)
+    if 'page' in request.GET:
+        page_num = request.GET['page']
+    else:
+        page_num = 1
+
+    page = paginator.get_page(page_num)
+    context = {'ord_books': ord_books, 'orders': page.object_list, 'page': page}
+    return render(request, 'storefront/orders.html', context)

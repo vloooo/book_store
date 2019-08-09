@@ -1,22 +1,75 @@
 {% extends 'user_auth/base.html' %}
+{% load bootstrap4 %}
 
 {% block content %}
 
-    {% for order in user.orders.all %}
+{% if orders %}
 
-        <p>
-            Field 1. {{ order.date }} ---- {{ order.sum }}
+{% for order in orders %}
+
+<div class="col-12 col-sm-9 col-lg-5 container my-auto">
+    <div class="mb-4 text-white bg-dark p-3 rounded">
+        <div class="row">
+            <div class=" col-8"> {{ order.date }} </div>
+            <div class=" col-4 ml-auto sm-small"> {{ order.sum }} $ </div>
+        </div>
+
+        <p class="card-text">
+
             {% if order.is_active %}
-            ------> active
+
+            <p class="ml-5 d-flex flex-column">
+                {% for ord_book in ord_books.all %}
+
+                    <div>
+                    <span class="fa fa-long-arrow-right"></span>
+                        {{ ord_book.book.title }}:
+                    </div>
+                    <div class="ml-5">
+                        {{ ord_book.price }}$ ({{ ord_book.amount }})
+                    </div>
+
+
+                {% endfor %}
+
+                <div class="row justify-content-end">
+                    <form method="POST" action="{% url 'storefront:close_order' %}">
+                        {% csrf_token %}
+                        <input type="submit" name="approve" value="Approve" class="btn btn-outline-light btn-md">
+                        <input type="submit" name="cancel" value="Cancel" class="btn btn-outline-light btn-md mx-3">
+                    </form>
+                </div>
+
+            </p>
+            {% else %}
+
+            {% for ord_book in order.ord_books.all %}
+            <p class="ml-5">
+
+                <div>
+                    <span class="fa fa-long-arrow-right"></span>
+                    {{ ord_book.title }}
+                </div>
+            </p>
+            {% endfor %}
+
             {% endif %}
         </p>
-        {% for book in order.ord_books.all %}
+    </div>
+</div>
 
-            <p>==>{{ book.title }}</p>
+{% endfor %}
 
-        {% endfor %}
-    {% empty %}
-        <p>Sorry, You haven't orders yet.</p>
-    {% endfor %}
+{% if  not orders.count < 3 and page.number == 1 %}
+<div class=" row justify-content-center">
+    {% bootstrap_pagination page pages_to_show=7 %}
+</div>
+{% endif %}
+
+{% else %}
+  <div class=" alert alert-info col-10 col-sm-6 mx-auto text-center" role="alert">
+    Sorry, You haven't orders yet.
+  </div>
+{% endif %}
 
 {% endblock%}

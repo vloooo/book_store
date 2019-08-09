@@ -1,29 +1,53 @@
 {% extends 'user_auth/base.html' %}
+{% load static %}
+
 
 {% block content %}
 
-    {% if order is not None %}
-        <p>
-            Field 1. {{ order.date }} ---- {{ order.sum }}
-            {% if order.is_active %}
-            ------> active
-            {% endif %}
+{% if order is not None %}
+
+<div class="col-12 col-sm-9 col-lg-5 container my-auto">
+    <div class="mb-4 text-white bg-dark p-3 rounded">
+
+        <div class="row">
+            <div class=" col-8"> {{ order.date }} </div>
+            <div class=" col-4 ml-auto sm-small"> {{ order.sum }} $ </div>
+        </div>
+
+        <p class="card-text">
+
+            {% for ord_book in ord_books.all %}
+            <p class="ml-5 d-flex flex-column">
+                <div>
+                    <span class="fa fa-long-arrow-right"></span>
+                    {{ ord_book.book.title }}:
+                </div>
+                <div class="ml-5">
+                    {{ ord_book.price }}$ ({{ ord_book.amount }})
+                </div>
+            </p>
+            {% endfor %}
+
+            <div class="row justify-content-end">
+                <form method="POST" action="{% url 'storefront:close_order' %}">
+                    {% csrf_token %}
+                    <input type="submit" name="approve" value="Approve" class="btn btn-outline-light btn-md">
+                    <input type="submit" name="cancel" value="Cancel" class="btn btn-outline-light btn-md mx-3">
+                </form>
+            </div>
+            
         </p>
-        {% for book in order.ord_books.all %}
 
-            <p>==>{{ book.title }}</p>
+    </div>
+</div>
 
-        {% endfor %}
+{% else %}
+<div class=" alert alert-info col-10 col-sm-6 mx-auto text-center" role="alert">
+    Sorry, You haven't active orders.
+</div>
+{% endif %}
 
-        <form method="POST" action="{% url 'storefront:close_order' %}">
-            {% csrf_token %}
-            <input type="submit" name="approve" value="Approve">
-            <input type="submit" name="cancel" value="Cancel">
 
-        </form>
 
-    {% else %}
-        <p>Sorry, You haven't active orders.</p>
-    {% endif %}
 
 {% endblock%}

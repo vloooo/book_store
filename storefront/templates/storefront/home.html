@@ -1,20 +1,62 @@
 {% extends 'user_auth/base.html' %}
+{% load static %}
+{% load bootstrap4 %}
 
 {% block content %}
 
+{% if books %}
+<div class="row justify-content-end">
+    <div class="dropdown mr-5">
+        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            sort by
+        </button>
+        <div class="dropdown-menu dropdown-sort-menu pr-0" aria-labelledby="dropdownMenuButton">
+            <a class="dropdown-item " href="{% url 'storefront:sort_y' sort_y='d' %}">Year desc</a>
+            <a class="dropdown-item" href="{% url 'storefront:sort_y' sort_y='y' %}">Year asc</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="{% url 'storefront:sort_p' sort_p='d' %}">Price desc</a>
+            <a class="dropdown-item" href="{% url 'storefront:sort_p' sort_p='y' %}">Price asc</a>
+        </div>
+    </div>
+</div>
+<div class="row justify-content-around">
     {% for book in books %}
-
-    <p>Field: {{ book.title }}</p>
-
-    {% if book.amount == 0 %}
-        <p>ABSENT</p>
-        <a href="{% url 'storefront:to_cart' pk=book.pk %}" class="disabled">to cart</a>
-
-    {% else %}
-        <a href="{% url 'storefront:to_cart' pk=book.pk %}">to cart</a>
-
-    {% endif %}
-    <br>
+    <div class="col-sm-6 col-md-5 col-lg-4 col-xl-3 mx-lg-2 my-3 col-auto align-self-center">
+        <div class="card">
+            <img class="card-img-top img-thumbnail img-home" 
+            src="{% if book.image %} {{ book.image.url }} {% else %} {% static 'images/1.png' %} {% endif %}"
+            alt="{% if book.image %} {{ book.image.name }} {% else %} no image {% endif %}">
+            <div class="card-body text-white bg-dark">
+                <a href="{% url 'storefront:profile_book' pk=book.pk%}" class="text-white py-0"> {{ book.title }} </a>
+                <p class="card-text">
+                    <p class="ml-2 small"><span class="fa fa-long-arrow-right"></span> Author: {{ book.author.name }}</p>
+                    <p class="ml-2 small"><span class="fa fa-long-arrow-right"></span> Genre: {{ book.genre.name }}</p>
+                    <p class="ml-2 small"><span class="fa fa-long-arrow-right"></span> Year: {{ book.year }}</p>
+                    <p class="ml-2 small"><span class="fa fa-long-arrow-right"></span> Price: {{ book.price }}</p>
+                </p>
+                {% if not user.is_staff %}
+                <div class="row justify-content-center">
+                    {% if book.amount == 0 %}
+                    <a href="{% url 'storefront:to_cart' pk=book.pk %}" class="btn btn-outline-light btn-lg disabled"><span class="mx-3">ABSENT</span></a>
+                    {% else %}
+                    <a href="{% url 'storefront:to_cart' pk=book.pk %}" class="btn btn-outline-light btn-lg mx-3"><span class="fa  fa-shopping-cart mx-5"></span></a>
+                    {% endif %}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
     {% endfor %}
+</div>
+
+<div class=" row justify-content-center mt-5">
+    {% bootstrap_pagination page pages_to_show=7 %}
+</div>
+
+{% else %}
+<div class=" alert alert-info col-10 col-sm-6 mx-auto text-center" role="alert">
+    Sorry we haven't such books yet.
+</div>
+{% endif %}
 
 {% endblock %}
