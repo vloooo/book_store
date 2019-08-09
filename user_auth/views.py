@@ -4,7 +4,6 @@ from user_auth.models import ExtraData
 from datetime import datetime
 from django.contrib.auth import authenticate, login
 
-
 def registration(request):
 
     if request.method == 'POST':

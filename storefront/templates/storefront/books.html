@@ -1,6 +1,12 @@
 {% extends 'user_auth/base.html' %}
+{% load bootstrap4 %}
 
 {% block content %}
+
+{% if books %}
+  <div class=" row justify-content-end mb-4">
+                  <a href="{% url 'storefront:new_book' %}" class="btn btn-secondary">new Book</a>
+  </div>
 
 <div id="table-wrapper" class="d-flex flex-column">
 <table class="table table-hover table-responsive-lg mb-5">
@@ -39,10 +45,22 @@
   </tbody>
 </table>
 
-<a href="{% url 'storefront:new_book' %}" class="btn btn-secondary mb-5 ml-auto">new Book</a>
+  <div class=" row justify-content-center">
+    {% bootstrap_pagination page pages_to_show=7 %}
+  </div>
 
 </div>
 
+    {% else %}
+      <div class="d-flex flex-column col-10 col-sm-6 mx-auto">
+
+              <div class=" alert alert-info  mx-auto text-center col-12" role="alert">
+                Sorry we haven't such books yet.
+              </div>
+      <a href="{% url 'storefront:new_book' %}" class="btn btn-secondary mb-5 ml-auto">new Book</a>
+
+      </div>
+    {% endif %}
 
 
 {% endblock%}

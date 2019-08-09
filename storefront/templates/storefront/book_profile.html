@@ -11,8 +11,8 @@
 
                <h5 class="card-title"> {{ book.title }} </h5>
                <p class="card-text">
-                   <p class="ml-5"><span class="fa fa-long-arrow-right"></span> Author: {{ book.author.name }}</p>
-                    <p class="ml-5"><span class="fa fa-long-arrow-right"></span> Genre: {{ book.genre.name }}</p>
+                   <p class="ml-5"><span class="fa fa-long-arrow-right"></span> Author: {% if book.author.name %}{{ book.author.name }} {% else %} ----- {% endif %}</p>
+                    <p class="ml-5"><span class="fa fa-long-arrow-right"></span> Genre: {% if book.genre.name %} {{ book.genre.name }} {% else %} ----- {% endif %}</p>
                     <p class="ml-5"><span class="fa fa-long-arrow-right"></span> Year: {{ book.year }}</p>
                     <p class="ml-5"><span class="fa fa-long-arrow-right"></span> Price: {{ book.price }}</p>
                     <p class="ml-5"><span class="fa fa-long-arrow-right"></span> Amount: {{ book.amount }}</p>

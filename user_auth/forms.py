@@ -90,7 +90,8 @@ class EditProfileForm(forms.ModelForm):
 
         if not len(args):
             initial = kwargs.pop('initial', {})
-            initial['birthday'] = self.user.extra_data.birthday.strftime("%d/%m/%Y")
+            if self.user.extra_data.birthday is not None:
+                initial['birthday'] = self.user.extra_data.birthday.strftime("%d/%m/%Y")
             initial['gender'] = self.user.extra_data.gender
             kwargs['initial'] = initial
 

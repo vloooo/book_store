@@ -19,9 +19,14 @@
 </head>
 <body>
 
-    <header class="sticky-top" id="header">
-      <nav class="navbar navbar-expand-lg navbar-dark bg-dark justify-content-between">
+    <header class="sticky-top container-fluid bg-dark" id="header">
+        <div class="row">
+      <nav class="navbar navbar-expand-md navbar-dark bg-dark justify-content-between col-9 ">
           <a class="navbar-brand" href="{% url 'storefront:index' %}">TestBookStore</a>
+
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
 
           <div class="collapse navbar-collapse" id="navbarNavDropdown">
             <ul class="navbar-nav">
@@ -58,30 +63,40 @@
                 </div>
               </li>
             </ul>
-          </div>
-            <ul class="navbar-nav">
+
+            </div>
+
+
+
+
+                  </nav>
+
+                <nav class="navbar navbar-expand navbar-dark bg-dark justify-content-end col-3 ">
+
+                        <div class="navbar-nav ml-md-auto row justify-content-end">
                 {% if not user.is_staff and user.is_active %}
-                    <li class="nav-item">
+                    <div class="nav-item">
                         <a class="nav-link" href="{% url 'storefront:archive' %}"><span class="fa fa-inbox"></span></a>
-                    </li>
-                    <li class="nav-item">
+                    </div>
+                    <div class="nav-item">
                         <a class="nav-link" href="{% url 'storefront:cart' %}"><span class="fa fa-shopping-basket
                         {% if active_order is not None %} text-success {% endif %}"></span></a>
-                    </li>
+                    </div>
                 {% endif %}
 
                 {% if user.is_active %}
-                    <li class="nav-item">
+                    <div class="nav-item">
                         <a class="nav-link" href="{% url 'auth:logout' %}"><span class="fa fa-power-off"></span></a>
-                    </li>
+                    </div>
                 {% else %}
-                    <li class="nav-item">
+                    <div class="nav-item">
                         <a class="nav-link" href="{% url 'auth:login' %}"><span class="fa fa-sign-in"></span></a>
-                    </li>
+                    </div>
                 {% endif %}
-            </ul>
 
         </nav>
+</div>
+                  </div>
 
     </header>
 
@@ -137,7 +152,7 @@
     </footer>
 
 
-    {% block jquery%}
+    {% block jquery %}
             <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
 
     {% endblock %}

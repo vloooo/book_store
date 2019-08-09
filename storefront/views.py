@@ -9,6 +9,7 @@ from storefront import messages as msg
 from django.contrib.auth.models import User
 from storefront.forms import BookForm
 from django.contrib.auth.decorators import user_passes_test
+from django.core.paginator import Paginator
 
 
 def index(request, a_name=None, g_name=None, sort_p=None, sort_y=None):
@@ -31,7 +32,15 @@ def index(request, a_name=None, g_name=None, sort_p=None, sort_y=None):
         else:
             books = books.order_by('-year')
 
-    context = {'books': books}
+    paginator = Paginator(books, 3)
+    if 'page' in request.GET:
+        page_num = request.GET['page']
+    else:
+        page_num = 1
+
+    page = paginator.get_page(page_num)
+
+    context = {'books': page.object_list, 'page': page}
     return render(request, 'storefront/home.html', context)
 
 
@@ -104,13 +113,27 @@ def close_order(request):
 
 @user_passes_test(lambda user: user.is_staff)
 def show_users(request):
-    context = {'users': User.objects.all()}
+    paginator = Paginator(User.objects.all().order_by('pk'), 10, 3)
+    if 'page' in request.GET:
+        page_num = request.GET['page']
+    else:
+        page_num = 1
+
+    page = paginator.get_page(page_num)
+    context = {'users': page.object_list, 'page': page}
     return render(request, 'storefront/users.html', context)
 
 
 @user_passes_test(lambda user: user.is_staff)
 def staff_book_list(request):
-    context = {'books': Books.objects.all()}
+    paginator = Paginator(Books.objects.all(), 10, 3)
+    if 'page' in request.GET:
+        page_num = request.GET['page']
+    else:
+        page_num = 1
+
+    page = paginator.get_page(page_num)
+    context = {'books': page.object_list, 'page': page}
     return render(request, 'storefront/books.html', context)
 
 
@@ -164,5 +187,14 @@ def book_edit(request, pk=None):
 
 def orders_archive(request):
     active_order = request.user.orders.filter(is_active=True).first()
-    context = {'ord_books': OrderedBook.objects.filter(order=active_order)}
+    ord_books = OrderedBook.objects.filter(order=active_order)
+
+    paginator = Paginator(request.user.orders.all(), 5, 2)
+    if 'page' in request.GET:
+        page_num = request.GET['page']
+    else:
+        page_num = 1
+
+    page = paginator.get_page(page_num)
+    context = {'ord_books': ord_books, 'orders': page.object_list, 'page': page}
     return render(request, 'storefront/orders.html', context)

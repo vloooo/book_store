@@ -1,7 +1,10 @@
 {% extends 'user_auth/base.html' %}
 {% load static %}
+{% load bootstrap4 %}
 
 {% block content %}
+
+{% if books %}
 
 <div class="row justify-content-end">
 
@@ -9,9 +12,10 @@
   <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
     sort by
   </button>
-  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-    <a class="dropdown-item" href="{% url 'storefront:sort_y' sort_y='d' %}">Year desc</a>
+  <div class="dropdown-menu pr-0" aria-labelledby="dropdownMenuButton">
+    <a class="dropdown-item " href="{% url 'storefront:sort_y' sort_y='d' %}">Year desc</a>
       <a class="dropdown-item" href="{% url 'storefront:sort_y' sort_y='y' %}">Year asc</a>
+  <div class="dropdown-divider"></div>
     <a class="dropdown-item" href="{% url 'storefront:sort_p' sort_p='d' %}">Price desc</a>
     <a class="dropdown-item" href="{% url 'storefront:sort_p' sort_p='y' %}">Price asc</a>
   </div>
@@ -51,14 +55,20 @@
          </div>
       </div>
 
-
-
-
-    {% empty %}
-        <div class=" alert alert-info col-6 text-center" role="alert">
-            Sorry we haven't such books yet.
-        </div>
     {% endfor %}
 </div>
+
+
+              <div class=" row justify-content-center mt-5">
+{% bootstrap_pagination page pages_to_show=7 %}
+              </div>
+
+    {% else %}
+
+              <div class=" alert alert-info col-10 col-sm-6 mx-auto text-center" role="alert">
+                Sorry we haven't such books yet.
+              </div>
+
+    {% endif %}
 
 {% endblock %}

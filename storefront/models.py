@@ -9,8 +9,8 @@ class Books(models.Model):
     available = models.BooleanField(default=True)
     image = models.CharField(max_length=30, null=True, blank=True)
     year = models.PositiveIntegerField()
-    genre = models.ForeignKey('Genre', on_delete=models.PROTECT, null=True, blank=True)
-    author = models.ForeignKey('Author', on_delete=models.PROTECT, null=True, blank=True)
+    genre = models.ForeignKey('Genre', on_delete=models.SET_NULL, null=True, blank=True)
+    author = models.ForeignKey('Author', on_delete=models.SET_NULL, null=True, blank=True)
 
     class Meta:
         ordering = ['year']
@@ -37,7 +37,7 @@ class Orders(models.Model):
 
 class OrderedBook(models.Model):
     order = models.ForeignKey(Orders, on_delete=models.CASCADE)
-    book = models.ForeignKey(Books, on_delete=models.PROTECT)
+    book = models.ForeignKey(Books, on_delete=models.CASCADE)
     amount = models.PositiveIntegerField(blank=True, default=1)
     price = models.DecimalField(decimal_places=2, max_digits=10)
 

@@ -11,6 +11,24 @@ a.disabled {
 margin-top: 50px;
 }
 
+.page-link{
+color: black;
+}
+
+.page-link:hover{
+color: black;
+
+}
+
+.page-item.active .page-link{
+border: solid 1px #AAA;
+background-color: white;
+color: black;
+}
+
+.dropdown-menu{
+    transform: translate3d(-23px, 38px, 0px);
+}
 
 #content-wrapper {
     min-height: 90vh;
