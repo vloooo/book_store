@@ -40,6 +40,9 @@
                                 {% for genre in genres %}
                                 <a class="dropdown-item" href="{% url 'storefront:from' g_name=genre.name %}">{{ genre.name }}</a>
                                 {% endfor %}
+                                {% if user.is_staff %}
+                                 <a class="dropdown-item" href="{% url 'storefront:add_genre' %}"> Add genre</a>
+                                {% endif %}
                             </div>
                         </li>
                         <li class="nav-item dropdown">
@@ -50,6 +53,9 @@
                                 {% for author in authors %}
                                 <a class="dropdown-item" href="{% url 'storefront:by' a_name=author.name %}">{{ author.name }}</a>
                                 {% endfor %}
+                                {% if user.is_staff %}
+                                 <a class="dropdown-item" href="{% url 'storefront:add_author' %}"> Add author </a>
+                                {% endif %}
                             </div>
                         </li>
                     </ul>

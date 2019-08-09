@@ -20,5 +20,7 @@ urlpatterns = [
     path('from/<g_name>', views.index, name='from'),
     path('sort/<sort_p>', views.index, name='sort_p'),
     path('sort/<sort_y>', views.index, name='sort_y'),
+    path('add_author/', views.add_author, name='add_author'),
+    path('add_genre/', views.add_genre, name='add_genre'),
 
 ]

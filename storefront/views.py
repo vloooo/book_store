@@ -7,7 +7,7 @@ from django.views.decorators.http import require_POST
 from django.contrib.auth.decorators import login_required
 from storefront import messages as msg
 from django.contrib.auth.models import User
-from storefront.forms import BookForm
+from storefront.forms import BookForm, AuthorForm, GenreForm
 from django.contrib.auth.decorators import user_passes_test
 from django.core.paginator import Paginator
 
@@ -198,3 +198,37 @@ def orders_archive(request):
     page = paginator.get_page(page_num)
     context = {'ord_books': ord_books, 'orders': page.object_list, 'page': page}
     return render(request, 'storefront/orders.html', context)
+
+
+@user_passes_test(lambda user: user.is_staff)
+def add_author(request):
+
+    if request.method == 'POST':
+        form = AuthorForm(request.POST)
+
+        if form.is_valid():
+            form.save()
+            messages.success(request, msg.scs_msg('author', 'added'))
+            return redirect('storefront:index')
+    else:
+        form = AuthorForm()
+
+    context = {'form': form}
+    return render(request, 'storefront/edit_book.html', context)
+
+
+@user_passes_test(lambda user: user.is_staff)
+def add_genre(request):
+
+    if request.method == 'POST':
+        form = GenreForm(request.POST)
+
+        if form.is_valid():
+            form.save()
+            messages.success(request, msg.scs_msg('genre', 'added'))
+            return redirect('storefront:index')
+    else:
+        form = GenreForm()
+
+    context = {'form': form}
+    return render(request, 'storefront/edit_book.html', context)
