@@ -1,0 +1,123 @@
+{% load static %}
+{% load bootstrap4 %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    {% block additional_links %}
+    {% endblock %}
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <title>TestBookStore</title>
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+</head>
+
+<body>
+    <header class="sticky-top container-fluid bg-dark" id="header">
+        <div class="row">
+            <nav class="navbar navbar-expand-md navbar-dark bg-dark justify-content-between col-9 ">
+                <a class="navbar-brand" href="{% url 'storefront:index' %}">TestBookStore</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                    <ul class="navbar-nav">
+                        {% if user.is_active %}
+                        <li class="nav-item active">
+                            <a class="nav-link" href="{% url 'auth:profile' %}">Hi, {{ user.username }}</a>
+                        </li>
+                        {% endif %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'storefront:index' %}">Home</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Genres
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                {% for genre in genres %}
+                                <a class="dropdown-item" href="{% url 'storefront:from' g_name=genre.name %}">{{ genre.name }}</a>
+                                {% endfor %}
+                            </div>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Authors
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                {% for author in authors %}
+                                <a class="dropdown-item" href="{% url 'storefront:by' a_name=author.name %}">{{ author.name }}</a>
+                                {% endfor %}
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+            <nav class="navbar navbar-expand navbar-dark bg-dark justify-content-end col-3 ">
+                <div class="navbar-nav ml-md-auto row justify-content-end">
+                    {% if not user.is_staff and user.is_active %}
+                    <div class="nav-item">
+                        <a class="nav-link" href="{% url 'storefront:archive' %}"><span class="fa fa-inbox"></span></a>
+                    </div>
+                    <div class="nav-item">
+                        <a class="nav-link" href="{% url 'storefront:cart' %}"><span class="fa fa-shopping-basket
+                        {% if active_order is not None %} text-success {% endif %}"></span></a>
+                    </div>
+                    {% endif %}
+                    {% if user.is_active %}
+                    <div class="nav-item">
+                        <a class="nav-link" href="{% url 'auth:logout' %}"><span class="fa fa-power-off"></span></a>
+                    </div>
+                    {% else %}
+                    <div class="nav-item">
+                        <a class="nav-link" href="{% url 'auth:login' %}"><span class="fa fa-sign-in"></span></a>
+                    </div>
+                    {% endif %}
+            </nav>
+        </div>
+        </div>
+    </header>
+    <section>
+        <div class="container-fluid" id="main-wrapper">
+            <div class="row">
+                <div class="bg-light border-right col-md-3 col-lg-2" id="sidebar-wrapper2">
+                    <div class="list-group list-group-flush pb-2" id="sidebar-wrapper">
+                        {% if user.is_staff %}
+                        <a href="{% url 'storefront:show_users' %}" class="list-group-item list-group-item-action bg-light border-top">Users</a>
+                        <a href="{% url 'storefront:show_books' %}" class="list-group-item list-group-item-action bg-light">Books</a>
+                        {% else %}
+                        <a href="{% url 'storefront:index' %}" class="list-group-item list-group-item-action bg-light border-top border-bottom">Books</a>
+                        {% endif %}
+                        {% if user.is_active %}
+                        <a href="{% url 'auth:profile' %}" class="list-group-item list-group-item-action bg-light border-bottom">Profile</a>
+                        {% endif %}
+                        {% if user.is_active and not user.is_staff %}
+                        <a href="{% url 'storefront:cart' %}" class="list-group-item list-group-item-action bg-light">Cart</a>
+                        <a href="{% url 'storefront:archive' %}" class="list-group-item list-group-item-action bg-light border-bottom">Orders</a>
+                        {% endif %}
+                    </div>
+                </div>
+                <div id="content-wrapper" class="row container-fluid justify-content-center p-0 mx-auto pt-3">
+                    <main class="col-10 col-sm-11 col-md-9 col-lg-10 offset-md-3 offset-lg-2 my-auto" id="content">
+                        {% bootstrap_messages %}
+                        {% block content %}
+                        {% endblock %}
+                    </main>
+                </div>
+            </div>
+        </div>
+    </section>
+    <footer>
+        <div class="container">
+        </div>
+    </footer>
+    {% block jquery %}
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    {% endblock %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+</body>
+
+</html>
