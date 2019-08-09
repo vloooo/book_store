@@ -1,22 +1,29 @@
 {% extends 'user_auth/base.html' %}
-
 {% block content %}
-             <div class="col-sm-10 col-md-8 col-xl-6 container my-auto">
-         <div class="mb-4 text-white bg-dark p-2 rounded">
-
-               <h5 class="card-title"> Profile </h5>
-               <p class="card-text">
-                   <p class="ml-5"><span class="fa fa-long-arrow-right"></span> Username: {{ user.username }}</p>
-                    <p class="ml-5"><span class="fa fa-long-arrow-right"></span> Email: {{ user.email }}</p>
-                    <p class="ml-5"><span class="fa fa-long-arrow-right"></span> Gender: {% if user.extra_data.gender %} {{ user.extra_data.gender }} {% else %} ----- {% endif %}</p>
-                    <p class="ml-5"><span class="fa fa-long-arrow-right"></span> Birthday: {% if user.extra_data.birthday %}{{ user.extra_data.birthday }} {% else %} ----- {% endif %}</p>
-
-               </p>
-                    <div class="row justify-content-end">
-                        <a href="{% url 'auth:edit' %}" class="btn btn-outline-light btn-md mx-3">Edit</a>
-                    </div>
-
-         </div>
-      </div>
-
+<div class="col-sm-10 col-md-8 col-xl-6 container my-auto">
+    <div class="mb-4 text-white bg-dark p-2 rounded">
+        <h5 class="card-title"> Profile </h5>
+        <p class="card-text">
+            <p class="ml-5">
+                <span class="fa fa-long-arrow-right"></span>
+                Username: {{ user.username }}
+            </p>
+            <p class="ml-5">
+                <span class="fa fa-long-arrow-right"></span>
+                Email: {{ user.email }}
+            </p>
+            <p class="ml-5">
+                <span class="fa fa-long-arrow-right"></span>
+                Gender: {% if user.extra_data.gender %} {{ user.extra_data.gender }} {% else %} ----- {% endif %}
+            </p>
+            <p class="ml-5">
+                <span class="fa fa-long-arrow-right"></span>
+                Birthday: {% if user.extra_data.birthday %}{{ user.extra_data.birthday }} {% else %} ----- {% endif %}
+            </p>
+        </p>
+        <div class="row justify-content-end">
+            <a href="{% url 'auth:edit' %}" class="btn btn-outline-light btn-md mx-3">Edit</a>
+        </div>
+    </div>
+</div>
 {% endblock %}

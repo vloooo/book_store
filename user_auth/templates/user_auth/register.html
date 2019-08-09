@@ -14,18 +14,17 @@
 
 <form method="POST" class="col-8 col-md-8 col-lg-6 mb-5 mx-auto p-3 rounded bg-dark text-white" style="background-color: red;">
 
-    {% csrf_token %}
-    {% bootstrap_form form layout='horizontal' show_help=False horizontal_label_class='col-md-4' field_class='col-md-8' form_group_class='align-items-center mt-2'%}
+  {% csrf_token %}
+  {% bootstrap_form form layout='horizontal' show_help=False horizontal_label_class='col-md-4' field_class='col-md-8' form_group_class='align-items-center mt-2'%}
 
-    <div class="row justify-content-end p-3 align-items-center">
-        <button type="submit" class="btn btn-secondary mr-3">Submit</button>
-        {% if form.gender %}
-            <a href="{% url 'auth:login' %}" class="text-white"> Login </a>
-        {% else %}
-            <a href="{% url 'auth:registration' %}" class="text-white"> or Sign up?</a>
-        {% endif %}
-    </div>
-
+  <div class="row justify-content-end p-3 align-items-center">
+      <button type="submit" class="btn btn-secondary mr-3">Submit</button>
+      {% if form.gender %}
+          <a href="{% url 'auth:login' %}" class="text-white"> Login </a>
+      {% else %}
+          <a href="{% url 'auth:registration' %}" class="text-white"> or Sign up?</a>
+      {% endif %}
+  </div>
 
 </form>
 
@@ -39,6 +38,6 @@
 
 {% endblock %}
 
-    {% block jquery %}
+{% block jquery %}
 
-    {% endblock %}
+{% endblock %}

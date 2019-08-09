@@ -7,7 +7,7 @@ class Books(models.Model):
     amount = models.PositiveIntegerField(blank=True, default=0)
     price = models.DecimalField(decimal_places=2, max_digits=10)
     available = models.BooleanField(default=True)
-    image = models.CharField(max_length=30, null=True, blank=True)
+    image = models.ImageField(upload_to='books/', null=True, blank=True)
     year = models.PositiveIntegerField()
     genre = models.ForeignKey('Genre', on_delete=models.SET_NULL, null=True, blank=True)
     author = models.ForeignKey('Author', on_delete=models.SET_NULL, null=True, blank=True)
@@ -18,6 +18,10 @@ class Books(models.Model):
 
     def __str__(self):
         return self.title
+
+    def delete(self, *args, **kwargs):
+        self.image.delete(save=False)
+        super().delete(*args, **kwargs)
 
 
 class Orders(models.Model):

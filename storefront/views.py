@@ -165,9 +165,9 @@ def book_edit(request, pk=None):
     if request.method == 'POST':
         try:
             book = Books.objects.get(pk=pk)
-            form = BookForm(request.POST, instance=book)
+            form = BookForm(request.POST, request.FILES, instance=book)
         except ObjectDoesNotExist:
-            form = BookForm(request.POST)
+            form = BookForm(request.POST, request.FILES)
 
         if form.is_valid():
             book = form.save()
