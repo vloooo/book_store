@@ -4,7 +4,8 @@
 {% block content %}
 
 <div class="col-12 col-lg-10 col-xl-8 container my-auto">
-    <div class="mb-sm-3 row text-white bg-dark p-2 rounded">
+
+    <div class="mb-sm row text-white bg-dark p-2 rounded">
         <div class=" col-sm mb-4 my-md-auto my-sm-3">
             <h5 class="card-title"> {{ book.title }} </h5>
             <p class="card-text">
@@ -30,11 +31,11 @@
                 </a>
                 {% endif %}
             </div>
-        </div>
-    </div>
+                </div>
     <div id="img-wrapper" class="col-sm bg-light rounded d-flex">
         <img class="col-sm my-auto mx-auto" src=" {% if book.image %} {{ book.image.url }} {% else %} {% static 'images/1.png' %} {% endif %}" alt=" {% if book.image %} {{ book.image.name }} {% else %} no image {% endif %}">
     </div>
+        </div>
 </div>
 
 {% endblock%}
