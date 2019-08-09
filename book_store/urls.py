@@ -19,7 +19,8 @@ from django.urls import path, include
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('auth/', include('user_auth.urls')),
-    path('books/', include('storefront.urls')),
+    path('', include('storefront.urls')),
+
 ]
 
 from django.conf import settings
