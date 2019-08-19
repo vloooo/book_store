@@ -1,42 +1,20 @@
-from django.shortcuts import render, redirect
 from storefront.models import Books, Orders, OrderedBook
 from django.db import IntegrityError
 from django.core.exceptions import ObjectDoesNotExist
-from django.contrib import messages
-from django.views.decorators.http import require_POST
-from django.contrib.auth.decorators import login_required
-from storefront import messages as msg
 from django.contrib.auth.models import User
-from storefront.forms import BookForm, AuthorForm, GenreForm
-from django.contrib.auth.decorators import user_passes_test
-from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from api.serializers import BookSerialiser, FullDataShowSerializer, OrdBookSerialiser
 from django.http import JsonResponse
-from rest_framework.decorators import api_view, permission_classes, authentication_classes
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.pagination import PageNumberPagination
-from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.viewsets import ModelViewSet
 from user_auth.models import ExtraData
-
-
 from django.contrib.auth import authenticate
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.authtoken.models import Token
-from rest_framework.permissions import AllowAny
 from rest_framework import permissions
-from rest_framework.authentication import BasicAuthentication, TokenAuthentication
 from rest_framework.status import HTTP_400_BAD_REQUEST, HTTP_404_NOT_FOUND, HTTP_200_OK, HTTP_204_NO_CONTENT
 from django.db.models import Q
-from datetime import datetime
-from rest_framework.exceptions import ValidationError
-
-
-@api_view(['GET'])
-def api_book(request, pk=0):
-    book = Books.objects.all()
-    serializer = BookSerialiser(book)
-    return JsonResponse(serializer.data, safe=False)
 
 
 @api_view(['GET'])
@@ -62,6 +40,7 @@ def index(request):
 
 
 @api_view(['DELETE'])
+@permission_classes([permissions.IsAdminUser, ])
 def del_user(request, pk):
     user = User.objects.get(pk=pk)
     user.delete()
@@ -104,27 +83,10 @@ class ShowUsers(ModelViewSet):
     queryset = ExtraData.objects.all()
 
 
-# @csrf_exempt
-# @api_view(['POST', "PUT"])
-# @permission_classes([permissions.AllowAny, ])
-# def edit_book(request): 
-#     print (request.data)          
-#     print ('sdgsd', request.FILES, 'wuiyewr')          
-
-#     serializer = FullDataShowSerializer(data=request.data)
-#     if serializer.is_valid(raise_exception=ValueError):
-#         serializer.create(validated_data=request.data)
-#         return Response(serializer.data, status=status.HTTP_201_CREATED)
-#     return Response(serializer.error_messages,
-#                     status=status.HTTP_400_BAD_REQUEST)
-
-
 @csrf_exempt
 @api_view(['POST', "PUT"])
 @permission_classes([permissions.AllowAny, ])
-@authentication_classes([BasicAuthentication, ])
 def login(request):
-    print(request.data)
 
     username = request.data.get("username")
     password = request.data.get("password")
@@ -153,7 +115,6 @@ def login(request):
 @csrf_exempt
 @api_view(['POST'])
 @permission_classes([permissions.AllowAny, ])
-@authentication_classes([BasicAuthentication, ])
 def registration(request):
 
     username = request.data.get("username")
@@ -219,7 +180,7 @@ def profile_edit(request):
 
     users = User.objects.filter(
         (Q(email=email) | Q(username=username)) & ~Q(id=user.id))
-    print(users)
+
     if users.exists():
         # raise ValidationError('This email or name is used for another account. Please, enter another one.')
         return Response({'error': 'This email or name is used for another account. Please, enter another one.'},
