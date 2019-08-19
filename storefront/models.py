@@ -9,8 +9,8 @@ class Books(models.Model):
     available = models.BooleanField(default=True)
     image = models.ImageField(upload_to='books/', null=True, blank=True)
     year = models.PositiveIntegerField()
-    genre = models.ForeignKey('Genre', on_delete=models.SET_NULL, null=True, blank=True)
-    author = models.ForeignKey('Author', on_delete=models.SET_NULL, null=True, blank=True)
+    genre = models.CharField(max_length=100, null=True, blank=True)
+    author = models.CharField(max_length=100, null=True, blank=True)
 
     class Meta:
         ordering = ['year']
